@@ -39,6 +39,11 @@ export async function proxy(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // --- Route Protection ---
+  // /display/* herkese açık — auth gerekmez
+  if (pathname.startsWith('/display/')) {
+    return NextResponse.next({ request: { headers } })
+  }
+
   const isAdminRoute = pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')
   const isPanelRoute = pathname.startsWith('/panel') && !pathname.startsWith('/panel/login')
 

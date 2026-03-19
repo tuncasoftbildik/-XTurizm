@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { LayoutDashboard, Package, BookOpen, Percent, Settings, Users } from 'lucide-react'
+import { LayoutDashboard, Package, BookOpen, Percent, Settings, Users, Monitor } from 'lucide-react'
 
 const navItems = [
   { label: 'Dashboard', href: '/panel/dashboard', icon: LayoutDashboard },
@@ -12,6 +12,7 @@ const navItems = [
   { label: 'Rezervasyonlar', href: '/panel/bookings', icon: BookOpen },
   { label: 'Komisyonlarım', href: '/panel/commissions', icon: Percent },
   { label: 'Müşteriler', href: '/panel/customers', icon: Users },
+  { label: 'Müşteri Ekranı', href: '/panel/display', icon: Monitor },
   { label: 'Ayarlar', href: '/panel/settings', icon: Settings },
 ]
 
