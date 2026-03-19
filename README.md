@@ -47,9 +47,12 @@ Dış Sağlayıcılar → Provider API Layer → Commission Engine
 | Müşteri Vitrin Ekranı (/display/[slug]) | ✅ |
 | Sağlayıcı Yönetimi (admin) | ✅ |
 | Email bildirim sistemi (Resend) | ✅ |
+| E-postada makbuz + portal linkleri | ✅ |
+| Müşteri Portalı (/my-booking/[ref]) | ✅ |
 | White-label özelleştirme (logo, renk) | ✅ |
-| Gerçek sağlayıcı API entegrasyonu | 🔜 |
+| Ürün Yönetimi (CRUD) | 🔜 |
 | Ödeme entegrasyonu | 🔜 |
+| Gerçek sağlayıcı API entegrasyonu | 🔜 |
 
 ## Kurulum
 
@@ -79,8 +82,9 @@ EMAIL_FROM=XTurizm <noreply@xturizm.com>
 ```
 Ürün Arama (/search) → Ürün Detay Modal → Müşteri Bilgi Formu → Onay
                                                                    ↓
-                                                        Email: Rezervasyon onayı
-                                                        PDF Makbuz: /receipt/[ref]
+                                         Email: Onay + "Rezervasyonumu Görüntüle" + "Makbuzu İndir"
+                                         Müşteri Portalı: /my-booking/[ref]  (e-posta doğrulamalı)
+                                         PDF Makbuz: /receipt/[ref]
 ```
 
 ### Acenta Paneli
@@ -120,6 +124,7 @@ Sağlayıcı Fiyatı
 | `/panel/display` | Müşteri vitrin ekranı ayarları |
 | `/display/[slug]` | Canlı müşteri vitrin ekranı (TV/ofis) |
 | `/receipt/[ref]` | Rezervasyon makbuzu (yazdırılabilir PDF) |
+| `/my-booking/[ref]` | Müşteri portalı — e-posta doğrulamalı rezervasyon takibi |
 
 ## API Endpoints
 
@@ -130,6 +135,7 @@ Sağlayıcı Fiyatı
 | `/api/products` | GET | Ürün listesi |
 | `/api/display/[slug]` | GET | Vitrin verisi (public) |
 | `/api/receipt/[ref]` | GET | Makbuz verisi (public) |
+| `/api/my-booking/[ref]` | POST `{email}` | Müşteri portalı — e-posta doğrulamalı rezervasyon verisi |
 | `/api/admin/agencies` | GET/POST | Acenta listele/oluştur |
 | `/api/admin/agencies/[id]` | PATCH/DELETE | Acenta güncelle/sil |
 | `/api/admin/agencies/[id]/details` | GET | Acenta detay (KPI + rezervasyonlar) |
@@ -150,11 +156,11 @@ Sağlayıcı Fiyatı
 
 | Olay | Alıcı | Açıklama |
 |------|-------|----------|
-| Yeni rezervasyon | Müşteri | Rezervasyon onay detayları |
+| Yeni rezervasyon | Müşteri | Onay + portal linki + makbuz linki |
 | Yeni rezervasyon | Acenta | Müşteri bilgisi + komisyon özeti |
 | Acenta onayı | Acenta | Hesap aktif edildi bildirimi |
 | Acenta askıya alma | Acenta | Hesap askıya alındı bildirimi |
 
 ---
 
-*v0.3 — Geliştirme aşamasında*
+*v0.4 — Geliştirme aşamasında*
