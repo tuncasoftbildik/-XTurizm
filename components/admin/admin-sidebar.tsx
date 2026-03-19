@@ -4,13 +4,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { LayoutDashboard, Building2, Plug, Percent, BarChart3, Settings } from 'lucide-react'
+import { LayoutDashboard, Building2, Plug, Percent, BookOpen, BarChart3, Settings } from 'lucide-react'
 
 const navItems = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Acentalar', href: '/admin/agencies', icon: Building2 },
   { label: 'Sağlayıcılar', href: '/admin/providers', icon: Plug },
   { label: 'Komisyonlar', href: '/admin/commissions', icon: Percent },
+  { label: 'Rezervasyonlar', href: '/admin/bookings', icon: BookOpen },
   { label: 'Raporlar', href: '/admin/reports', icon: BarChart3 },
   { label: 'Ayarlar', href: '/admin/settings', icon: Settings },
 ]
