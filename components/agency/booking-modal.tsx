@@ -144,15 +144,11 @@ export function BookingModal({ open, product, providerId, onClose }: Props) {
               <div className="bg-slate-50 rounded-lg p-4 space-y-2 text-sm">
                 <p className="font-medium text-slate-700 mb-3">Fiyat Detayı</p>
                 <div className="flex justify-between text-slate-500">
-                  <span>Sağlayıcı fiyatı</span>
-                  <span>{formatCurrency(pricing.basePrice, pricing.currency)}</span>
-                </div>
-                <div className="flex justify-between text-blue-600">
-                  <span>Platform komisyonu</span>
-                  <span>+{formatCurrency(pricing.platformCommission, pricing.currency)}</span>
+                  <span>Net fiyat</span>
+                  <span>{formatCurrency(pricing.basePrice + pricing.platformCommission, pricing.currency)}</span>
                 </div>
                 <div className="flex justify-between text-green-600">
-                  <span>Acenta komisyonu</span>
+                  <span>Komisyonum</span>
                   <span>+{formatCurrency(pricing.agencyCommission, pricing.currency)}</span>
                 </div>
                 <div className="border-t pt-2 flex justify-between font-bold text-slate-900 text-base">

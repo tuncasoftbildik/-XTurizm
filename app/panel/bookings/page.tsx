@@ -155,15 +155,11 @@ export default function AgencyBookings() {
               <p className="text-slate-500 text-xs font-medium uppercase tracking-wide">Fiyat Dökümü</p>
               <div className="bg-slate-50 rounded-lg p-3 space-y-1 text-xs">
                 <div className="flex justify-between text-slate-500">
-                  <span>Sağlayıcı fiyatı</span>
-                  <span>{formatCurrency(selected.base_price, selected.currency)}</span>
-                </div>
-                <div className="flex justify-between text-blue-600">
-                  <span>Platform komisyonu</span>
-                  <span>+{formatCurrency(selected.platform_commission, selected.currency)}</span>
+                  <span>Net fiyat</span>
+                  <span>{formatCurrency(selected.base_price + selected.platform_commission, selected.currency)}</span>
                 </div>
                 <div className="flex justify-between text-green-600">
-                  <span>Acenta komisyonu</span>
+                  <span>Komisyonum</span>
                   <span>+{formatCurrency(selected.agency_commission, selected.currency)}</span>
                 </div>
                 <div className="border-t pt-1 flex justify-between font-semibold text-slate-900">

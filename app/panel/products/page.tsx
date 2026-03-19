@@ -109,15 +109,11 @@ export default function AgencyProducts() {
 
                 <div className="bg-slate-50 rounded-lg p-3 space-y-1 text-xs">
                   <div className="flex justify-between text-slate-500">
-                    <span>Sağlayıcı fiyatı</span>
-                    <span>{formatCurrency(pricing.basePrice, pricing.currency)}</span>
-                  </div>
-                  <div className="flex justify-between text-blue-600">
-                    <span>Platform komisyonu</span>
-                    <span>+{formatCurrency(pricing.platformCommission, pricing.currency)}</span>
+                    <span>Net fiyat</span>
+                    <span>{formatCurrency(pricing.basePrice + pricing.platformCommission, pricing.currency)}</span>
                   </div>
                   <div className="flex justify-between text-green-600">
-                    <span>Acenta komisyonu</span>
+                    <span>Komisyonum</span>
                     <span>+{formatCurrency(pricing.agencyCommission, pricing.currency)}</span>
                   </div>
                   <div className="border-t pt-1 flex justify-between font-semibold text-slate-900 text-sm">

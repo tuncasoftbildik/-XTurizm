@@ -42,12 +42,12 @@ export default function AgencyDashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Fiyat Yapım</CardTitle>
+          <CardTitle className="text-base">Fiyat Yapısı</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-slate-600 space-y-2">
-          <p>Platform size ürünleri <strong>sağlayıcı fiyatı + platform komisyonu</strong> ile sunar.</p>
-          <p>Siz bu fiyatın üzerine kendi komisyonunuzu ekleyebilirsiniz.</p>
-          <p>Müşteri son fiyatı görür — ara fiyatlar gizlidir.</p>
+          <p>Platform size ürünleri <strong>net fiyat</strong> olarak sunar.</p>
+          <p>Siz bu net fiyatın üzerine kendi komisyonunuzu ekleyebilirsiniz.</p>
+          <p>Müşteri yalnızca son satış fiyatını görür.</p>
         </CardContent>
       </Card>
     </div>

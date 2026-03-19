@@ -138,30 +138,12 @@ export default function AgencyCommissions() {
         </p>
       </div>
 
-      {/* Platform Komisyonu — salt okunur */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
-        <div className="flex items-start gap-3">
-          <Info size={18} className="text-blue-500 mt-0.5 shrink-0" />
-          <div className="space-y-2 flex-1">
-            <p className="text-sm font-semibold text-blue-800">Platform Komisyonları (Değiştirilemez)</p>
-            {loading ? (
-              <p className="text-sm text-blue-600">Yükleniyor...</p>
-            ) : platformRules.length === 0 ? (
-              <p className="text-sm text-blue-600">Platform komisyonu tanımlı değil.</p>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {platformRules.map(r => (
-                  <span key={r.id} className="bg-blue-100 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full">
-                    {r.product_type ? productTypes.find(p => p.value === r.product_type)?.label + ': ' : 'Genel: '}
-                    {r.commission_type === 'percentage' ? `%${r.value}` : `₺${r.value}`}
-                    {r.min_amount ? ` (min ₺${r.min_amount})` : ''}
-                    {r.max_amount ? ` (max ₺${r.max_amount})` : ''}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+      {/* Bilgi notu */}
+      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-3">
+        <Info size={16} className="text-slate-400 mt-0.5 shrink-0" />
+        <p className="text-sm text-slate-500">
+          Platform ürünleri size <strong>net fiyat</strong> olarak sunar. Siz bu fiyatın üzerine kendi komisyonunuzu ekleyebilirsiniz.
+        </p>
       </div>
 
       {/* Acenta Komisyon Kuralları */}
@@ -343,25 +325,21 @@ export default function AgencyCommissions() {
 
         <div className="bg-slate-50 rounded-xl p-4 space-y-2 text-sm max-w-sm">
           <div className="flex justify-between text-slate-500">
-            <span>Sağlayıcı fiyatı</span>
-            <span>{formatCurrency(exampleBase)}</span>
-          </div>
-          <div className="flex justify-between text-blue-600">
-            <span>Platform komisyonu</span>
-            <span>+{formatCurrency(platformCommission)}</span>
+            <span>Net fiyat</span>
+            <span>{formatCurrency(exampleBase + platformCommission)}</span>
           </div>
           <div className="flex justify-between text-green-600">
-            <span>Acenta komisyonum</span>
+            <span>Komisyonum</span>
             <span>+{formatCurrency(agencyCommission)}</span>
           </div>
           <div className="border-t pt-2 flex justify-between font-bold text-slate-900">
             <span>Müşteri satış fiyatı</span>
             <span>{formatCurrency(exampleBase + platformCommission + agencyCommission)}</span>
           </div>
-          {exampleBase > 0 && (
+          {agencyCommission > 0 && (
             <div className="text-xs text-slate-400 pt-1">
-              Toplam marj: %{(((platformCommission + agencyCommission) / exampleBase) * 100).toFixed(1)}
-              {' '}· Kazancım: {formatCurrency(agencyCommission)}
+              Kazancım: {formatCurrency(agencyCommission)}
+              {' '}(%{((agencyCommission / (exampleBase + platformCommission)) * 100).toFixed(1)} marj)
             </div>
           )}
         </div>
