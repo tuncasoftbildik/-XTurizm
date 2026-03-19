@@ -33,7 +33,12 @@ export function bookingConfirmationEmail(data: {
   totalPrice: string
   currency: string
   notes?: string
+  appUrl?: string
 }): { subject: string; html: string } {
+  const base = data.appUrl ?? process.env.NEXT_PUBLIC_APP_URL ?? 'https://xturizm.com'
+  const portalUrl = `${base}/my-booking/${data.bookingRef}`
+  const receiptUrl = `${base}/receipt/${data.bookingRef}`
+
   return {
     subject: `Rezervasyon Onayı — ${data.bookingRef}`,
     html: layout(`
@@ -61,7 +66,16 @@ export function bookingConfirmationEmail(data: {
         </tr>` : ''}
       </table>
 
-      <p style="color:#475569;">Sorularınız için bizimle iletişime geçebilirsiniz.</p>
+      <div style="text-align:center;margin:32px 0;display:flex;gap:12px;justify-content:center;">
+        <a href="${portalUrl}" style="background:#0f172a;color:#fff;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;font-size:14px;display:inline-block;margin:4px;">
+          Rezervasyonumu Görüntüle
+        </a>
+        <a href="${receiptUrl}" style="background:#f1f5f9;color:#0f172a;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:bold;font-size:14px;display:inline-block;margin:4px;border:1px solid #e2e8f0;">
+          Makbuzu İndir
+        </a>
+      </div>
+
+      <p style="color:#475569;font-size:13px;text-align:center;">Sorularınız için bizimle iletişime geçebilirsiniz.</p>
     `),
   }
 }
