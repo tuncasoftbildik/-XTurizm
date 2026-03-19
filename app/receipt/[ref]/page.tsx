@@ -95,26 +95,35 @@ export default function ReceiptPage() {
       <div className="min-h-screen bg-slate-100 flex items-start justify-center py-10 print:bg-white print:py-0">
         <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl overflow-hidden print:shadow-none print:rounded-none print:max-w-none">
 
-          {/* Header */}
-          <div className="px-8 py-6 flex items-start justify-between" style={{ backgroundColor: primary }}>
+          {/* Header — Logo bölümü (beyaz) */}
+          <div className="px-8 py-5 flex items-center justify-between border-b">
             <div>
               {booking.tenants?.logo_url ? (
-                <Image src={booking.tenants.logo_url} alt={booking.tenants.name} width={120} height={60} style={{ height: 'auto' }} className="object-contain brightness-0 invert" />
+                <Image
+                  src={booking.tenants.logo_url}
+                  alt={booking.tenants.name}
+                  width={140}
+                  height={70}
+                  style={{ height: 'auto', maxHeight: '60px', width: 'auto' }}
+                  className="object-contain"
+                />
               ) : (
-                <div className="text-white text-xl font-bold">{booking.tenants?.name ?? 'Acenta'}</div>
+                <div className="text-xl font-bold" style={{ color: primary }}>{booking.tenants?.name ?? 'Acenta'}</div>
               )}
-              <div className="text-white/70 text-xs mt-1">{booking.tenants?.contact_email}</div>
-              {booking.tenants?.contact_phone && <div className="text-white/70 text-xs">{booking.tenants.contact_phone}</div>}
+              <div className="text-slate-400 text-xs mt-1">{booking.tenants?.contact_email}</div>
+              {booking.tenants?.contact_phone && <div className="text-slate-400 text-xs">{booking.tenants.contact_phone}</div>}
             </div>
             <div className="text-right">
-              <div className="text-white/70 text-xs uppercase tracking-widest mb-1">Rezervasyon Makbuzu</div>
-              <div className="text-white text-2xl font-black font-mono">{booking.booking_ref}</div>
-              <div className="mt-1 inline-flex items-center gap-1 bg-white/20 rounded-full px-2.5 py-0.5 text-white text-xs font-medium">
+              <div className="text-slate-400 text-xs uppercase tracking-widest mb-1">Rezervasyon Makbuzu</div>
+              <div className="text-2xl font-black font-mono" style={{ color: primary }}>{booking.booking_ref}</div>
+              <div className="mt-1.5 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium text-white" style={{ backgroundColor: primary }}>
                 <CheckCircle size={11} />
                 {STATUS_LABELS[booking.status] ?? booking.status}
               </div>
             </div>
           </div>
+          {/* Renkli şerit */}
+          <div className="h-1.5 w-full" style={{ backgroundColor: primary }} />
 
           {/* Body */}
           <div className="px-8 py-6 space-y-6">
