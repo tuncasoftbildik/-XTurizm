@@ -1,32 +1,29 @@
+/**
+ * B2C Public Booking API — Auth gerektirmez
+ * Doğrudan web sitesinden yapılan rezervasyonlar için.
+ * Sadece platform komisyonu uygulanır (acenta komisyonu yok).
+ */
+
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { calculatePrice, formatCurrency } from '@/lib/commission/engine'
 import { getProduct } from '@/lib/providers/mock'
 import { sendEmail } from '@/lib/email/resend'
-import { bookingConfirmationEmail, bookingNotificationEmail } from '@/lib/email/templates'
+import { bookingConfirmationEmail } from '@/lib/email/templates'
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
 
-  // Oturumu kontrol et
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Oturum açmanız gerekiyor.' }, { status: 401 })
-
-  const { data: profile } = await supabase
-    .from('users')
-    .select('tenant_id, role')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile?.tenant_id) {
-    return NextResponse.json({ error: 'Acenta bilgisi bulunamadı.' }, { status: 400 })
-  }
-
   const body = await request.json()
-  const { product_external_id, provider_id, customer_name, customer_email, customer_phone, notes } = body
+  const { product_external_id, customer_name, customer_email, customer_phone, notes } = body
 
   if (!product_external_id || !customer_name || !customer_email) {
     return NextResponse.json({ error: 'Ürün, müşteri adı ve email zorunludur.' }, { status: 400 })
+  }
+
+  // Email formatı kontrolü
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer_email)) {
+    return NextResponse.json({ error: 'Geçersiz email adresi.' }, { status: 400 })
   }
 
   // Ürünü mock provider'dan çek
@@ -40,25 +37,18 @@ export async function POST(request: NextRequest) {
     .is('tenant_id', null)
     .eq('is_active', true)
 
-  // Acenta komisyon kurallarını çek
-  const { data: agencyRules } = await supabase
-    .from('commission_rules')
-    .select('*')
-    .eq('tenant_id', profile.tenant_id)
-    .eq('is_active', true)
-
-  // Fiyat hesapla
+  // B2C satışta acenta komisyonu yok
   const pricing = calculatePrice({
     basePrice: product.basePrice,
     currency: product.currency,
     platformRules: platformRules ?? [],
-    agencyRules: agencyRules ?? [],
-    tenantId: profile.tenant_id,
-    providerId: provider_id ?? 'mock',
+    agencyRules: [],
+    tenantId: 'direct',
+    providerId: 'mock',
     productType: product.type,
   })
 
-  // Ürünü DB'de bul veya oluştur (products tablosu)
+  // Ürünü DB'de bul veya oluştur
   let productId: string
 
   const { data: existingProduct } = await supabase
@@ -70,11 +60,10 @@ export async function POST(request: NextRequest) {
   if (existingProduct) {
     productId = existingProduct.id
   } else {
-    // Yeni ürün kaydet
     const { data: newProduct, error: pErr } = await supabase
       .from('products')
       .insert({
-        provider_id: provider_id ?? '00000000-0000-0000-0000-000000000000',
+        provider_id: '00000000-0000-0000-0000-000000000000',
         external_id: product_external_id,
         type: product.type,
         title: product.title,
@@ -95,27 +84,51 @@ export async function POST(request: NextRequest) {
     productId = newProduct.id
   }
 
+  // Demo tenant'ı bul (B2C satışlar için)
+  const { data: directTenant } = await supabase
+    .from('tenants')
+    .select('id')
+    .eq('slug', 'direct')
+    .single()
+
+  // Yoksa demo tenant'ı kullan
+  let tenantId: string
+  if (directTenant) {
+    tenantId = directTenant.id
+  } else {
+    const { data: demoTenant } = await supabase
+      .from('tenants')
+      .select('id')
+      .eq('slug', 'demo')
+      .single()
+
+    if (!demoTenant) {
+      return NextResponse.json({ error: 'Platform yapılandırması eksik.' }, { status: 500 })
+    }
+    tenantId = demoTenant.id
+  }
+
   // Rezervasyonu oluştur
   const { data: booking, error: bErr } = await supabase
     .from('bookings')
     .insert({
-      tenant_id: profile.tenant_id,
-      user_id: user.id,
+      tenant_id: tenantId,
       product_id: productId,
       customer_name,
       customer_email,
       customer_phone: customer_phone || null,
       base_price: pricing.basePrice,
       platform_commission: pricing.platformCommission,
-      agency_commission: pricing.agencyCommission,
+      agency_commission: 0,
       total_price: pricing.totalPrice,
       currency: pricing.currency,
-      status: 'confirmed',
+      status: 'pending',
       notes: notes || null,
       metadata: {
         product_title: product.title,
         product_type: product.type,
         external_id: product_external_id,
+        source: 'b2c_storefront',
       },
     })
     .select()
@@ -125,10 +138,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Rezervasyon oluşturulamadı.' }, { status: 500 })
   }
 
-  // Email bildirimleri (hata olursa rezervasyonu engellemez)
+  // Müşteriye onay emaili gönder (hata olursa rezervasyonu engellemez)
   try {
-    // Müşteriye onay emaili
-    const confirmEmail = bookingConfirmationEmail({
+    const emailData = bookingConfirmationEmail({
       bookingRef: booking.booking_ref,
       customerName: customer_name,
       productTitle: product.title,
@@ -136,30 +148,15 @@ export async function POST(request: NextRequest) {
       currency: pricing.currency,
       notes: notes || undefined,
     })
-    await sendEmail({ to: customer_email, ...confirmEmail })
-
-    // Acentaya bildirim emaili
-    const { data: tenant } = await supabase
-      .from('tenants')
-      .select('contact_email')
-      .eq('id', profile.tenant_id)
-      .single()
-
-    if (tenant?.contact_email) {
-      const notifyEmail = bookingNotificationEmail({
-        bookingRef: booking.booking_ref,
-        customerName: customer_name,
-        customerEmail: customer_email,
-        customerPhone: customer_phone || undefined,
-        productTitle: product.title,
-        totalPrice: formatCurrency(pricing.totalPrice, pricing.currency),
-        agencyCommission: formatCurrency(pricing.agencyCommission, pricing.currency),
-      })
-      await sendEmail({ to: tenant.contact_email, ...notifyEmail })
-    }
+    await sendEmail({ to: customer_email, ...emailData })
   } catch {
-    console.error('[Booking] Email gönderilemedi, rezervasyon başarılı.')
+    console.error('[B2C Booking] Email gönderilemedi, rezervasyon devam ediyor.')
   }
 
-  return NextResponse.json({ ok: true, booking_ref: booking.booking_ref, booking }, { status: 201 })
+  return NextResponse.json({
+    ok: true,
+    booking_ref: booking.booking_ref,
+    booking,
+    pricing,
+  }, { status: 201 })
 }

@@ -1,9 +1,26 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
+async function requireAdmin(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'platform_admin') return null
+  return user
+}
+
 // GET — tüm acentaları listele
 export async function GET() {
   const supabase = await createClient()
+
+  const admin = await requireAdmin(supabase)
+  if (!admin) return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 403 })
 
   const { data, error } = await supabase
     .from('tenants')
@@ -20,6 +37,10 @@ export async function GET() {
 // POST — yeni acenta oluştur
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
+
+  const admin = await requireAdmin(supabase)
+  if (!admin) return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 403 })
+
   const body = await request.json()
 
   const { name, slug, contact_email, contact_phone, primary_color, secondary_color } = body
