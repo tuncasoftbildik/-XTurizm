@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { LayoutDashboard, Package, BookOpen, Percent, Settings, Users } from 'lucide-react'
@@ -17,15 +18,20 @@ const navItems = [
 interface AgencySidebarProps {
   tenantName?: string
   accentColor?: string
+  logoUrl?: string | null
 }
 
-export function AgencySidebar({ tenantName = 'Acenta', accentColor = '#10b981' }: AgencySidebarProps) {
+export function AgencySidebar({ tenantName = 'Acenta', accentColor = '#10b981', logoUrl }: AgencySidebarProps) {
   const pathname = usePathname()
   return (
     <aside className="w-64 min-h-screen bg-slate-900 text-white flex flex-col">
-      <div className="px-6 py-5 border-b border-slate-700">
-        <div className="text-lg font-bold truncate" style={{ color: accentColor }}>{tenantName}</div>
-        <div className="text-xs text-slate-400 mt-0.5">Acenta Paneli</div>
+      <div className="px-4 py-4 border-b border-slate-700">
+        {logoUrl ? (
+          <Image src={logoUrl} alt={tenantName} width={140} height={70} className="object-contain" />
+        ) : (
+          <Image src="/logo.png" alt="XTurizm" width={140} height={70} className="brightness-110" />
+        )}
+        <div className="text-xs mt-2 truncate font-medium" style={{ color: accentColor }}>{tenantName}</div>
       </div>
       <nav className="flex-1 px-3 py-4 space-y-1">
         {navItems.map(item => {

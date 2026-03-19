@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { LayoutDashboard, Building2, Plug, Percent, BarChart3, Settings } from 'lucide-react'
@@ -18,9 +19,9 @@ export function AdminSidebar() {
   const pathname = usePathname()
   return (
     <aside className="w-64 min-h-screen bg-slate-900 text-white flex flex-col">
-      <div className="px-6 py-5 border-b border-slate-700">
-        <div className="text-lg font-bold text-blue-400">XTurizm Admin</div>
-        <div className="text-xs text-slate-400 mt-0.5">Platform Yönetimi</div>
+      <div className="px-4 py-4 border-b border-slate-700">
+        <Image src="/logo.png" alt="XTurizm" width={140} height={70} className="brightness-110" />
+        <div className="text-xs text-slate-400 mt-2">Platform Yönetimi</div>
       </div>
       <nav className="flex-1 px-3 py-4 space-y-1">
         {navItems.map(item => {

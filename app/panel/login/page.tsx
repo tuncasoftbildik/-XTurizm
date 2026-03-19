@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import Image from 'next/image'
 
 export default function AgencyLogin() {
   const router = useRouter()
@@ -40,9 +41,9 @@ export default function AgencyLogin() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white">Acenta Paneli</h1>
-          <p className="text-slate-400 text-sm mt-1">Hesabınıza giriş yapın</p>
+        <div className="flex flex-col items-center mb-8 gap-3">
+          <Image src="/logo.png" alt="XTurizm" width={180} height={90} className="brightness-110 drop-shadow-lg" />
+          <p className="text-slate-400 text-sm">Acenta Paneli — Hesabınıza giriş yapın</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 space-y-4 shadow-xl">

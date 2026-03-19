@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import Image from 'next/image'
 
 export default function AdminLogin() {
   const router = useRouter()
@@ -40,9 +41,9 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white">XTurizm</h1>
-          <p className="text-slate-400 text-sm mt-1">Platform Yönetici Girişi</p>
+        <div className="flex flex-col items-center mb-8 gap-3">
+          <Image src="/logo.png" alt="XTurizm" width={180} height={90} className="brightness-110 drop-shadow-lg" />
+          <p className="text-slate-400 text-sm">Platform Yönetici Girişi</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-slate-800 rounded-xl p-6 space-y-4">
