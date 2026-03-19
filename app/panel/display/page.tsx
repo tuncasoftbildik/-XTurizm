@@ -151,13 +151,13 @@ export default function AgencyDisplay() {
       <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-400 font-mono">
         <p className="font-semibold text-slate-500 mb-2 font-sans text-sm">Supabase SQL (bir kez çalıştırın):</p>
         <pre className="whitespace-pre-wrap break-all">{`-- Vitrin sayfası için public okuma izinleri
-CREATE POLICY IF NOT EXISTS "display_tenant_read" ON tenants
-  FOR SELECT TO anon USING (is_active = true);
+CREATE POLICY "display_tenant_read" ON tenants
+  FOR SELECT TO anon USING (status = 'active');
 
-CREATE POLICY IF NOT EXISTS "display_platform_rules" ON commission_rules
+CREATE POLICY "display_platform_rules" ON commission_rules
   FOR SELECT TO anon USING (tenant_id IS NULL AND is_active = true);
 
-CREATE POLICY IF NOT EXISTS "display_agency_rules" ON commission_rules
+CREATE POLICY "display_agency_rules" ON commission_rules
   FOR SELECT TO anon USING (is_active = true);`}</pre>
       </div>
     </div>

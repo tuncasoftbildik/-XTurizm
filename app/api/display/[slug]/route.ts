@@ -12,7 +12,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
     .from('tenants')
     .select('id, name, slug, logo_url, primary_color, secondary_color')
     .eq('slug', slug)
-    .eq('is_active', true)
+    .eq('status', 'active')
     .single()
 
   if (!tenant) {
