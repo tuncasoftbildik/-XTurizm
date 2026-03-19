@@ -6,7 +6,7 @@ export default function StorefrontHome() {
     <main className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-600 flex flex-col items-center justify-center text-white px-4">
       <div className="text-center space-y-6 max-w-2xl">
         <div className="flex justify-center">
-          <Image src="/logo.png" alt="XTurizm" width={300} height={200} className="object-contain drop-shadow-lg" priority />
+          <Image src="/logo.png" alt="XTurizm" width={300} height={200} style={{ height: "auto" }} className="object-contain drop-shadow-lg" priority />
         </div>
         <p className="text-xl text-blue-200">
           Türkiye'nin B2B2C Turizm Platformu

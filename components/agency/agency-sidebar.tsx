@@ -29,7 +29,7 @@ export function AgencySidebar({ tenantName = 'Acenta', accentColor = '#10b981', 
         {logoUrl ? (
           <Image src={logoUrl} alt={tenantName} width={140} height={70} className="object-contain" />
         ) : (
-          <Image src="/logo.png" alt="XTurizm" width={150} height={100} className="object-contain" />
+          <Image src="/logo.png" alt="XTurizm" width={150} height={100} style={{ height: "auto" }} className="object-contain" loading="eager" />
         )}
         <div className="text-xs mt-2 truncate font-medium" style={{ color: accentColor }}>{tenantName}</div>
       </div>

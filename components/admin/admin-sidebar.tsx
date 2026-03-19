@@ -21,7 +21,7 @@ export function AdminSidebar() {
   return (
     <aside className="w-64 min-h-screen bg-slate-900 text-white flex flex-col">
       <div className="px-4 py-4 border-b border-slate-700">
-        <Image src="/logo.png" alt="XTurizm" width={150} height={100} className="object-contain" />
+        <Image src="/logo.png" alt="XTurizm" width={150} height={100} style={{ height: "auto" }} className="object-contain" loading="eager" />
         <div className="text-xs text-slate-400 mt-2">Platform Yönetimi</div>
       </div>
       <nav className="flex-1 px-3 py-4 space-y-1">

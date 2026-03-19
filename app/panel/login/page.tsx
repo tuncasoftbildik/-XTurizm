@@ -42,7 +42,7 @@ export default function AgencyLogin() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8 gap-3">
-          <Image src="/logo.png" alt="XTurizm" width={270} height={180} className="object-contain drop-shadow-lg" />
+          <Image src="/logo.png" alt="XTurizm" width={270} height={180} style={{ height: "auto" }} className="object-contain drop-shadow-lg" />
           <p className="text-slate-400 text-sm">Acenta Paneli — Hesabınıza giriş yapın</p>
         </div>
 
