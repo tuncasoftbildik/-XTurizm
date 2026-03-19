@@ -31,7 +31,7 @@ export async function GET() {
   return NextResponse.json({ platformRules: platformRules ?? [], agencyRules: agencyRules ?? [] })
 }
 
-// POST — acenta kendi komisyon kuralını ekler
+// POST — acenta yeni komisyon kuralı ekler (ürün tipine göre)
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
 
@@ -47,16 +47,22 @@ export async function POST(request: NextRequest) {
   if (!profile?.tenant_id) return NextResponse.json({ error: 'Acenta bulunamadı' }, { status: 400 })
 
   const body = await request.json()
+  const { name, product_type, commission_type, value, min_amount, max_amount } = body
+
+  if (!commission_type || value === undefined || value === '') {
+    return NextResponse.json({ error: 'Tür ve değer zorunludur.' }, { status: 400 })
+  }
 
   const { data, error } = await supabase
     .from('commission_rules')
-    .upsert({
-      name: 'Acenta Komisyonu',
+    .insert({
+      name: name || (product_type ? `Acenta Komisyonu — ${product_type}` : 'Acenta Genel Komisyonu'),
       tenant_id: profile.tenant_id,
-      commission_type: body.commission_type ?? 'percentage',
-      value: Number(body.value),
-      min_amount: body.min_amount ? Number(body.min_amount) : null,
-      max_amount: body.max_amount ? Number(body.max_amount) : null,
+      product_type: product_type || null,
+      commission_type,
+      value: Number(value),
+      min_amount: min_amount ? Number(min_amount) : null,
+      max_amount: max_amount ? Number(max_amount) : null,
       is_active: true,
       priority: 10,
     })
@@ -64,5 +70,5 @@ export async function POST(request: NextRequest) {
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  return NextResponse.json(data, { status: 201 })
 }
