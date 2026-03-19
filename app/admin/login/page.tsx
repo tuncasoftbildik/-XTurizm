@@ -42,7 +42,7 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8 gap-3">
-          <Image src="/logo.png" alt="XTurizm" width={180} height={180} className="object-contain drop-shadow-lg" />
+          <Image src="/logo.png" alt="XTurizm" width={270} height={180} className="object-contain drop-shadow-lg" />
           <p className="text-slate-400 text-sm">Platform Yönetici Girişi</p>
         </div>
 
